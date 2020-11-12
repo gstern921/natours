@@ -10,6 +10,7 @@ const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
 const compression = require('compression');
+const cors = require('cors');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -30,6 +31,11 @@ app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));
 
 // MIDDLEWARE
+
+// Allowing cross-origin resource sharing
+app.use(cors());
+
+app.options('*', cors());
 
 // Serving Static Files
 app.use(express.static(path.join(__dirname, 'public')));
