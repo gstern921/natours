@@ -9,7 +9,6 @@ export const updateMyAccountSettings = async (data) => {
       data,
     });
     await showSuccessAlert('Account data updated successfully!');
-    console.log(response.data);
     return response.data;
     // location.reload();
   } catch (err) {

@@ -84,6 +84,6 @@ if (bookTourButton) {
     el.textContent = 'Processing...';
     const { tourId } = el.dataset;
     const session = await bookTour(tourId);
-    console.log(session);
+    // console.log(session);
   });
 }

@@ -9,6 +9,7 @@ const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const hpp = require('hpp');
 const cookieParser = require('cookie-parser');
+const compression = require('compression');
 
 const tourRouter = require('./routes/tourRoutes');
 const userRouter = require('./routes/userRoutes');
@@ -72,6 +73,9 @@ app.use(
     ],
   })
 );
+
+// Use compression
+app.use(compression());
 
 // Test Middleware (Adds the current timestamp to the request)
 app.use((req, res, next) => {

@@ -86,8 +86,8 @@ class APIFeatures {
     const pageNumber =
       +this.queryStringObj.page > 0 ? +this.queryStringObj.page : 1;
 
-    console.log(`resultsPerPage: ${resultsPerPage}`);
-    console.log(`pageNumber: ${pageNumber}`);
+    // console.log(`resultsPerPage: ${resultsPerPage}`);
+    // console.log(`pageNumber: ${pageNumber}`);
 
     const skipCount = resultsPerPage * (pageNumber - 1);
     this.query = this.query.skip(skipCount);

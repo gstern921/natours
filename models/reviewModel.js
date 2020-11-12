@@ -69,12 +69,12 @@ reviewSchema.post('save', async function () {
 
 reviewSchema.pre(/^findOneAnd/, async function (next) {
   this.r = await this.findOne();
-  console.log(this.r);
+  // console.log(this.r);
   next();
 });
 
 reviewSchema.post(/^findOneAnd/, async function () {
-  console.log(this.r);
+  // console.log(this.r);
   if (this.r) {
     await this.r.constructor.calcAverageRatings(this.r.tour);
   }

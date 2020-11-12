@@ -49,7 +49,7 @@ exports.handleLogin = catchAsync(async (req, res, next) => {
 });
 
 exports.handleGetMyAccount = catchAsync(async (req, res, next) => {
-  console.log('current user:', res.locals.user);
+  // console.log('current user:', res.locals.user);
   res.status(constants.HTTP_OK).render('account', { title: 'Account Info' });
 });
 
