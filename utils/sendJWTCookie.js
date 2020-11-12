@@ -1,11 +1,8 @@
-module.exports = (token, res) => {
+module.exports = (token, req, res) => {
   const cookieOptions = {
     httpOnly: true,
-    secure: true,
     maxAge: +process.env.JWT_COOKIE_EXPIRES_IN,
+    secure: true,
   };
-  if (process.env.NODE_ENV === 'development') {
-    cookieOptions.secure = false;
-  }
   res.cookie('jwt', token, cookieOptions);
 };

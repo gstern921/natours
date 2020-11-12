@@ -24,7 +24,7 @@ exports.signup = catchAsync(async (req, res, next) => {
   newUser.password = undefined;
 
   const token = signJWT(newUser);
-  sendJWTCookie(token, res);
+  sendJWTCookie(token, req, res);
 
   const url = `${req.protocol}://${req.get('host')}/me`;
 
@@ -76,7 +76,7 @@ exports.login = catchAsync(async (req, res, next) => {
 
   // 3) If everything is ok, send token to client
   const token = signJWT(user);
-  sendJWTCookie(token, res);
+  sendJWTCookie(token, req, res);
 
   if (isAPI) {
     return res.status(constants.HTTP_OK).json({
@@ -129,7 +129,7 @@ exports.isLoggedIn = catchAsync(async (req, res, next) => {
 });
 
 exports.logout = catchAsync(async (req, res, next) => {
-  sendJWTCookie('', res);
+  sendJWTCookie('', req, res);
   const isAPI = isAPIRequest(req);
   if (isAPI) {
     return res
@@ -251,7 +251,7 @@ exports.changePassword = catchAsync(async (req, res, next) => {
 
   // 4) Log the user in, send JWT
   const token = signJWT(user);
-  sendJWTCookie(token, res);
+  sendJWTCookie(token, req, res);
 
   return res.status(constants.HTTP_OK).json({
     status: constants.STATUS_SUCCESS,

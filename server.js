@@ -55,6 +55,12 @@ process.on('unhandledRejection', (err) => {
   console.log(`Unhandled Rejection! 💥 ${err.name}, ${err.message}`);
   if (server && typeof server.close === 'function') {
     server.close(() => process.exit(1));
-  } else {
+  }
+});
+
+process.on('SIGTERM', (err) => {
+  console.log(`👋 SIGTERM RECEIVED! Shutting down gracefully`);
+  if (server && typeof server.close === 'function') {
+    server.close(() => console.log(`💥 Process terminated!`));
   }
 });

@@ -101,7 +101,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // 4) Log the user in, send the JWT
   const token = signJWT(user);
-  sendJWTCookie(token, res);
+  sendJWTCookie(token, req, res);
 
   return res
     .status(constants.HTTP_OK)
