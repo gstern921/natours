@@ -54,6 +54,7 @@ const createBookingCheckout = async (session) => {
   const user = await User.findOne({ email: session.customer_email }, { id: 1 });
   const price = session.line_items[0].amount / 100;
   const booking = await Booking.create({ tour, user, price });
+  console.log(booking);
   return booking;
 };
 
@@ -74,13 +75,12 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
   }
 
   const eventType = event ? event.type : undefined;
+  const expectedEventType = 'checkout.session.async_payment_succeeded';
 
-  if (!eventType || eventType !== 'checkout.session.async_payment_succeeded') {
+  if (!eventType || eventType !== expectedEventType) {
     return res
       .status(HTTP_BAD_REQUEST)
-      .send(
-        `Expected type checkout.session.async_payment_succeeded, but got ${eventType}`
-      );
+      .send(`Expected type ${expectedEventType}, but got ${eventType}`);
   }
   const booking = createBookingCheckout(event.data.object);
   if (booking) {

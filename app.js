@@ -43,7 +43,24 @@ app.options('*', cors());
 app.use(express.static(path.join(__dirname, 'public')));
 
 // Set Security HTTP Headers
-app.use(helmet());
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", 'api.mapbox.com', 'js.stripe.com'],
+        workerSrc: ["'self'", 'blob:'],
+        objectSrc: ["'none'"],
+        upgradeInsecureRequests: [],
+        fontSrc: ["'self'", 'fonts.gstatic.com'],
+        styleSrc: ["'self'", 'api.mapbox.com', 'fonts.googleapis.com'],
+        imgSrc: ["'self'", 'data:'],
+        frameSrc: ["'self'", 'js.stripe.com'],
+        connectSrc: ["'self'", 'api.mapbox.com', 'events.mapbox.com'],
+      },
+    },
+  })
+);
 
 // Log data about each request (only in development)
 if (process.env.NODE_ENV === 'development') {
@@ -99,9 +116,7 @@ app.use((req, res, next) => {
   // console.log(req.headers);
   // console.log(req.body);
   // console.log(req.cookies);
-  if (process.env.NODE_ENV === 'development') {
-    res.setHeader('Content-Security-Policy', '');
-  }
+
   next();
 });
 
