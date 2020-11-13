@@ -74,7 +74,7 @@ exports.webhookCheckout = catchAsync(async (req, res, next) => {
   }
 
   const eventType = event ? event.type : undefined;
-  const expectedEventType = 'checkout.session.async_payment_succeeded';
+  const expectedEventType = 'checkout.session.completed';
 
   if (!eventType || eventType !== expectedEventType) {
     return res
