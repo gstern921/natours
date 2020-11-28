@@ -2,12 +2,16 @@
 import axios from 'axios';
 import { showSuccessAlert, showErrorAlert } from './alerts';
 
-const login = async (email, password) => {
+const login = async (email, password, token) => {
   const data = { email, password };
+
   try {
     const res = await axios({
       method: 'POST',
-      url: '/api/v1/users/login',
+      url: '/api/login',
+      headers: {
+        'CSRF-Token': token, // <-- is the csrf token as a header
+      },
       data,
     });
 

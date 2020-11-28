@@ -36,6 +36,9 @@ const handleJWTExpiredError = () =>
     constants.HTTP_UNAUTHORIZED
   );
 
+const handleBadCSRFTokenError = () =>
+  new AppError('Invalid CSRF Token', constants.HTTP_FORBIDDEN);
+
 const sendAPIErrorDev = (err, req, res) => {
   const { status, message, stack } = err;
   console.error('💥  ERROR 💥', err);
@@ -84,6 +87,7 @@ const sendRenderedErrorProd = (err, req, res) => {
 module.exports = (err, req, res, next) => {
   err.statusCode = +err.statusCode || constants.HTTP_NOT_FOUND;
   err.status = err.status || constants.STATUS_FAIL;
+  console.log(err);
 
   let returnedError = err;
   if (err.name === 'CastError') {
@@ -96,6 +100,8 @@ module.exports = (err, req, res, next) => {
     returnedError = handleJWTExpiredError();
   } else if (err.code === 11000) {
     returnedError = handleDuplicateFieldsDB(err);
+  } else if (err.code === 'EBADCSRFTOKEN') {
+    returnedError = handleBadCSRFTokenError();
   }
 
   const isAPIError = req.originalUrl.startsWith('/api');

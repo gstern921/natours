@@ -5,6 +5,22 @@ const User = require('../models/userModel');
 const Booking = require('../models/bookingModel');
 const AppError = require('../utils/appError');
 
+const alerts = {
+  bookingSuccess: {
+    type: 'success',
+    message:
+      'Tour was booked successfully, and a confirmation email was sent. Thank you! If your booking does not show up here immediately, please check again later',
+  },
+};
+
+exports.setAlert = (req, res, next) => {
+  const { alert } = req.query;
+  if (alert && alerts[alert]) {
+    res.locals.alert = alerts[alert];
+  }
+  next();
+};
+
 exports.handleGetOverview = catchAsync(async (req, res, next) => {
   // Get tour data from collection
   const tours = await Tour.find();
@@ -46,6 +62,10 @@ exports.handleLogin = catchAsync(async (req, res, next) => {
   res
     .status(constants.HTTP_OK)
     .render('login', { title: 'Log into your account' });
+});
+
+exports.handleSignUp = catchAsync(async (req, res, next) => {
+  return res.status(constants.HTTP_OK).render('signup', { title: 'Sign up' });
 });
 
 exports.handleGetMyAccount = catchAsync(async (req, res, next) => {

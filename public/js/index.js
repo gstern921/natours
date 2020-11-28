@@ -7,6 +7,7 @@ import {
 } from './updateMyAccountSettings';
 import { displayMap } from './mapbox';
 import { bookTour } from './stripe';
+import { showSuccessAlert, showErrorAlert } from './alerts';
 
 const mapBox = document.getElementById('map');
 const loginForm = document.getElementById('login');
@@ -22,18 +23,37 @@ if (locations) {
   displayMap(locations);
 }
 
+const csrfMetaElement = document.querySelector('meta[name="csrf-token"]');
+
+const csrfToken = csrfMetaElement
+  ? csrfMetaElement.getAttribute('content')
+  : null;
+
+let alertMessage = document.body.dataset.alertMessage;
+alertMessage = alertMessage ? alertMessage.trim() : alertMessage;
+if (alertMessage) {
+  const characterCount = alertMessage.length;
+  const duration = Math.max(characterCount / 7, 5);
+  const type = document.body.dataset.alertType;
+  if (type === 'error') {
+    showErrorAlert(alertMessage, duration);
+  } else {
+    showSuccessAlert(alertMessage, duration);
+  }
+}
+
 if (loginForm) {
   loginForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    login(email, password);
+    login(email, password, csrfToken);
   });
 }
 if (logoutButton) {
   logoutButton.addEventListener('click', (e) => {
     e.preventDefault();
-    logout();
+    logout(csrfToken);
   });
 }
 if (changeMyAccountSettingsForm) {
@@ -45,7 +65,7 @@ if (changeMyAccountSettingsForm) {
     formData.append('email', target.querySelector('#email').value);
     formData.append('photo', target.querySelector('#user-photo').files[0]);
 
-    await updateMyAccountSettings(formData);
+    await updateMyAccountSettings(formData, csrfToken);
     location.reload();
   });
 }
@@ -67,6 +87,7 @@ if (changeMyPasswordForm) {
       currentPassword,
       password,
       passwordConfirm,
+      csrfToken,
     });
     target.querySelector('#password-current').value = '';
     target.querySelector('#password').value = '';
@@ -83,7 +104,7 @@ if (bookTourButton) {
     const el = e.target;
     el.textContent = 'Processing...';
     const { tourId } = el.dataset;
-    const session = await bookTour(tourId);
+    const session = await bookTour(tourId, csrfToken);
     // console.log(session);
   });
 }

@@ -19,14 +19,17 @@ const viewRouter = require('./routes/viewRoutes');
 const bookingRouter = require('./routes/bookingRoutes');
 
 const bookingController = require('./controllers/bookingController');
+const authenticationController = require('./controllers/authenticationController');
 
 const globalErrorController = require('./controllers/errorController');
 const AppError = require('./utils/appError');
 const constants = require('./constants/constants');
+const catchAsync = require('./utils/catchAsync');
+const isSecureRequest = require('./utils/isSecureRequest');
+const expireCookies = require('./utils/expireCookies');
 
 // Start express app
 const app = express();
-
 app.enable('trust proxy');
 
 app.set('view engine', 'pug');
@@ -56,7 +59,7 @@ app.use(
         styleSrc: ["'self'", 'api.mapbox.com', 'fonts.googleapis.com'],
         imgSrc: ["'self'", 'data:'],
         frameSrc: ["'self'", 'js.stripe.com'],
-        connectSrc: ["'self'", 'api.mapbox.com', 'events.mapbox.com'],
+        connectSrc: ["'self'", 'api.mapbox.com', 'events.mapbox.com', 'ws:'],
       },
     },
   })
@@ -112,13 +115,18 @@ app.use(compression());
 
 // Test Middleware (Adds the current timestamp to the request)
 app.use((req, res, next) => {
+  console.log(req.headers);
+  // console.log(req.session);
   req.requestTime = new Date().toISOString();
-  // console.log(req.headers);
-  // console.log(req.body);
-  // console.log(req.cookies);
-
   next();
 });
+
+app.use(isSecureRequest);
+
+app.post('/api/login', authenticationController.login);
+app.post('/api/logout', authenticationController.logout);
+
+app.use(authenticationController.isLoggedIn);
 
 app.use('/api/v1/tours', tourRouter);
 app.use('/api/v1/users', userRouter);

@@ -5,8 +5,13 @@ const { ROLE_USER, ROLE_ADMIN } = require('../constants/constants');
 const reviewController = require('../controllers/reviewController');
 const authenticationController = require('../controllers/authenticationController');
 const authorizationController = require('../controllers/authorizationController');
+const csrfProtection = require('../utils/csrfProtection');
+const addCSRFToken = require('../utils/addCsrfToken');
 
 const router = express.Router({ mergeParams: true });
+
+router.use(csrfProtection);
+router.use(addCSRFToken);
 
 router.use(authenticationController.protect);
 

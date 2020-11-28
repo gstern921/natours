@@ -75,7 +75,7 @@ exports.resizeUserPhoto = catchAsync(async (req, res, next) => {
   }
 
   if (!req.user || !req.user.id) {
-    return cb(
+    return next(
       new AppError(
         'Cannot process photo without being logged in',
         constants.HTTP_UNAUTHORIZED

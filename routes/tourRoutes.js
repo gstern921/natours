@@ -4,6 +4,8 @@ const tourController = require('../controllers/tourController');
 const authenticationController = require('../controllers/authenticationController');
 const authorizationController = require('../controllers/authorizationController');
 const reviewRouter = require('./reviewRoutes');
+const csrfProtection = require('../utils/csrfProtection');
+const addCSRFToken = require('../utils/addCsrfToken');
 
 const { ROLE_ADMIN, ROLE_LEAD_GUIDE } = require('../constants/constants');
 
@@ -19,6 +21,8 @@ router.route('/tour-stats').get(tourController.handleGetTourStats);
 router
   .route('/monthly-plan/:year')
   .get(
+    csrfProtection,
+    addCSRFToken,
     authenticationController.protect,
     authorizationController.restrictTo(ROLE_ADMIN, ROLE_LEAD_GUIDE, ROLE_ADMIN),
     tourController.handleGetMonthlyPlan
@@ -35,6 +39,8 @@ router
   .route('/')
   .get(tourController.handleGetAllTours)
   .post(
+    csrfProtection,
+    addCSRFToken,
     authenticationController.protect,
     authorizationController.restrictTo(ROLE_ADMIN, ROLE_LEAD_GUIDE),
     tourController.handleCreateTour
@@ -44,6 +50,8 @@ router
   .route('/:id')
   .get(tourController.handleGetTourById)
   .patch(
+    csrfProtection,
+    addCSRFToken,
     authenticationController.protect,
     authorizationController.restrictTo(ROLE_ADMIN, ROLE_LEAD_GUIDE),
     tourController.uploadTourImages,
@@ -51,6 +59,8 @@ router
     tourController.handleUpdateTourById
   )
   .delete(
+    csrfProtection,
+    addCSRFToken,
     authenticationController.protect,
     authorizationController.restrictTo(ROLE_ADMIN, ROLE_LEAD_GUIDE),
     tourController.handleDeleteTourById

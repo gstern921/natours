@@ -3,15 +3,17 @@ const userController = require('../controllers/userController');
 const authenticationController = require('../controllers/authenticationController');
 const authorizationController = require('../controllers/authorizationController');
 const { ROLE_ADMIN } = require('../constants/constants');
+const csrfProtection = require('../utils/csrfProtection');
+const addCSRFToken = require('../utils/addCsrfToken');
 
 const router = express.Router();
 
 router.post('/signup', authenticationController.signup);
-router.post('/login', authenticationController.login);
-router.get('/logout', authenticationController.logout);
 router.post('/forgot-password', authorizationController.forgotPassword);
 router.patch('/reset-password/:token', authorizationController.resetPassword);
 
+router.use(csrfProtection);
+router.use(addCSRFToken);
 router.use(authenticationController.protect);
 
 router.patch('/update-my-password', authenticationController.changePassword);

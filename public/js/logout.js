@@ -1,10 +1,13 @@
 import axios from 'axios';
 import { showSuccessAlert, showErrorAlert } from './alerts';
-const logout = async () => {
+const logout = async (token) => {
   try {
     const res = await axios({
-      method: 'GET',
-      url: '/api/v1/users/logout',
+      method: 'POST',
+      headers: {
+        'CSRF-Token': token, // <-- is the csrf token as a header
+      },
+      url: '/api/logout',
     });
 
     if (res.data.status === 'success') {

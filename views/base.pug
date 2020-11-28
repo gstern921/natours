@@ -4,14 +4,18 @@ html
     block head
       meta(charset='UTF-8')
       meta(name='viewport' content='width=device-width, initial-scale=1.0')
+      if csrfToken
+        meta(name="csrf-token" content=`${csrfToken}`)
       title Natours | #{title || 'Exciting tours for adventurous people'}
       link(href='https://fonts.googleapis.com/css?family=Lato:300,300i,700' rel='stylesheet')
       
       link(rel='stylesheet' href='/css/style.css')
       link(rel='shortcut icon' type='image/png' href='/img/favicon.png')
-  body
+  body(data-alert-message=`${alert ? alert.message : ''}` data-alert-type=`${alert ? alert.type : ''}`)
+    
     // Header
     include _header
+    .alert.hidden
 
     // CONTENT
     block content
@@ -19,6 +23,8 @@ html
 
     // FOOTER
     include _footer
+
+
 
     block scripts
     

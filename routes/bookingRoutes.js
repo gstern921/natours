@@ -10,9 +10,13 @@ const bookingController = require('../controllers/bookingController');
 const authenticationController = require('../controllers/authenticationController');
 const authorizationController = require('../controllers/authorizationController');
 const userController = require('../controllers/userController');
+const csrfProtection = require('../utils/csrfProtection');
+const addCSRFToken = require('../utils/addCsrfToken');
 
 const router = express.Router();
 
+router.use(csrfProtection);
+router.use(addCSRFToken);
 router.use(authenticationController.protect);
 
 router.get('/checkout-session/:tourId', bookingController.getCheckoutSession);
