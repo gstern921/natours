@@ -1107,6 +1107,11 @@ body {
   border-bottom: 1px solid currentColor;
 }
 
+a.card__wrapper {
+  text-decoration: none;
+  color: initial;
+}
+
 .card-container {
   max-width: 120rem;
   margin: 0 auto;
